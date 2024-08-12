@@ -1,73 +1,17 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-//
-// class LoginView extends StatelessWidget {
-//   const LoginView({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     var mediaQuery = MediaQuery.of(context);
-//     var theme = Theme.of(context);
-//     return Scaffold(
-//         body: Container(
-//       width: double.infinity,
-//       height: 400,
-//       decoration: BoxDecoration(
-//           image: DecorationImage(
-//               image: AssetImage(
-//                 "assets/images/auth_background.png",
-//               ),
-//               fit: BoxFit.cover)),
-//       child: Padding(
-//         padding: EdgeInsets.only(
-//             top: mediaQuery.size.height * 0.1, left: 20, right: 20),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.stretch,
-//           children: [
-//             Text(
-//               "Login",
-//               textAlign: TextAlign.center,
-//               style: theme.textTheme.bodyMedium
-//                   ?.copyWith(fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(
-//               height: 190,
-//             ),
-//             Column(
-//               children: [
-//                 Text(
-//                   "Welcome back!",
-//                   style: theme.textTheme.bodyLarge?.copyWith(
-//                       color: Colors.black,
-//                       fontWeight: FontWeight.w800
-//                   ),
-//                 ),
-//                 TextField(
-//                   decoration: InputDecoration(
-//                     label: Text("E-ail",style: theme.textTheme.bodySmall,),
-//
-//                   ),
-//                 )
-//               ],
-//             )
-//           ],
-//         ),
-//       ),
-//     ));
-//   }
-// }
 import 'package:flutter/material.dart';
-import 'package:to_do/core/app_theme_manager.dart';
 import 'package:to_do/core/page_routes_names.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+import '../../core/app_theme_manager.dart';
+
+class RegistrationView extends StatefulWidget {
+  const RegistrationView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegistrationView> createState() => _RegistrationViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegistrationViewState extends State<RegistrationView> {
+  TextEditingController personController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
@@ -91,7 +35,7 @@ class _LoginViewState extends State<LoginView> {
           appBar: AppBar(
             centerTitle: true,
             title: const Text(
-              "Login",
+              "Create Account",
             ),
           ),
           body: Padding(
@@ -106,11 +50,44 @@ class _LoginViewState extends State<LoginView> {
                   SizedBox(
                     height: mediaQuery.size.height * .2,
                   ),
-                  Text(
-                    "Welcome back!",
-                    textAlign: TextAlign.start,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                        color: Colors.black, fontWeight: FontWeight.w800),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "plz Enter the name";
+                      }
+                      var regex = RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&*()*+]+@[a-zA-Z0-9.a-zA-Z0-9]+\.[a-zA-Z]+");
+                      if (!regex.hasMatch(value)) {
+                        return "No valid Name";
+                      } else {
+                        return null;
+                      }
+                    },
+                    controller: personController,
+                    cursorColor: AppThemeManager.primaryBlueColor,
+                    cursorHeight: 25,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: "Poppins",
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                        suffixIcon: const Icon(Icons.person),
+                        hintText: "please enter your Full Name",
+                        label: Text(
+                          "full name",
+                          style: theme.textTheme.displaySmall,
+                        ),
+                        errorStyle: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Poppins",
+                          color: Colors.red,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: theme.primaryColorLight, width: 2))),
                   ),
                   TextFormField(
                     validator: (value) {
@@ -203,18 +180,6 @@ class _LoginViewState extends State<LoginView> {
                                 color: theme.primaryColorLight, width: 2))),
                   ),
                   const SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "forget password!",
-                      style: theme.textTheme.displaySmall!.copyWith(
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
                     height: 60,
                   ),
                   FilledButton(
@@ -226,9 +191,9 @@ class _LoginViewState extends State<LoginView> {
                               borderRadius: BorderRadius.circular(8))),
                       onPressed: () {
                         // print(emailController.text);
-                        //   if(formKey.currentState!.validate()){
-                        //     print("It is a valid");
-                        //   }
+                        // if(formKey.currentState!.validate()){
+                        //   print("It is a valid");
+                        // }
                         Navigator.pushReplacementNamed(
                             context, PageRoutesNames.layout);
                       },
@@ -236,27 +201,12 @@ class _LoginViewState extends State<LoginView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "login",
+                            "create account",
                             style: theme.textTheme.displayMedium,
                           ),
                           const Icon(Icons.arrow_forward),
                         ],
                       )),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, PageRoutesNames.registration);
-                    },
-                    child: Text(
-                      "or create my account",
-                      style: theme.textTheme.displaySmall!.copyWith(
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
